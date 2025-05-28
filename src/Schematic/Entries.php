@@ -5,9 +5,11 @@ namespace Schematic;
 use Closure;
 use InvalidArgumentException;
 use Iterator;
+use JsonSerializable;
+use ReturnTypeWillChange;
 
 
-class Entries implements Iterator, IEntries
+class Entries implements Iterator, IEntries, JsonSerializable
 {
 
 	/**
@@ -51,7 +53,7 @@ class Entries implements Iterator, IEntries
 	/**
 	 * @return Entry
 	 */
-	#[\ReturnTypeWillChange]
+	#[ReturnTypeWillChange]
 	public function current()
 	{
 		return $this->get($this->key());
@@ -67,7 +69,7 @@ class Entries implements Iterator, IEntries
 	/**
 	 * @return mixed
 	 */
-	#[\ReturnTypeWillChange]
+	#[ReturnTypeWillChange]
 	public function key()
 	{
 		return key($this->items);
@@ -181,6 +183,13 @@ class Entries implements Iterator, IEntries
 		if ($missingKeys !== []) {
 			throw new InvalidArgumentException('Missing entries with keys: ' . implode(', ', array_keys($missingKeys)) . '.');
 		}
+	}
+
+
+	#[ReturnTypeWillChange]
+	public function jsonSerialize()
+	{
+		return $this->items;
 	}
 
 }
